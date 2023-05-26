@@ -286,7 +286,7 @@ boolean WiFiManager::autoConnect(char const *apName, char const *apPassword) {
   }
   #endif
   
-  if(getWiFiIsSaved){
+  if(getWiFiIsSaved()){
     // sethostname before wifi ready
     // https://github.com/tzapu/WiFiManager/issues/1403
     #ifdef ESP32
