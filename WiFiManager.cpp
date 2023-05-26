@@ -659,6 +659,7 @@ void WiFiManager::setupDNSD(){
 
 void WiFiManager::setupConfigPortal() {
   setupHTTPServer();
+  _preloadwifiscan = true;
   _lastscan = 0; // reset network scan cache
   if(_preloadwifiscan) WiFi_scanNetworks(true,true); // preload wifiscan , async
 }
