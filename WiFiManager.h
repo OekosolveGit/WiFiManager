@@ -429,7 +429,8 @@ class WiFiManager
     // get hostname helper
     String        getWiFiHostname();
 
-
+    //registers a new wifi or reconnects to an old one with the given ssid and pass and connects to it
+    uint8_t	  connectWifi(String ssid, String pass, bool connect = true);
     std::unique_ptr<DNSServer>        dnsServer;
 
     #if defined(ESP32) && defined(WM_WEBSERVERSHIM)
@@ -571,7 +572,6 @@ class WiFiManager
     void          setupDNSD();
     void          setupHTTPServer();
 
-    uint8_t       connectWifi(String ssid, String pass, bool connect = true);
     bool          setSTAConfig();
     bool          wifiConnectDefault();
     bool          wifiConnectNew(String ssid, String pass,bool connect = true);
