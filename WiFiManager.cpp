@@ -244,7 +244,7 @@ void WiFiManager::_begin(){
 
   // Has to be done at the start to ensure the esp_wifi_config is initialized,
   // before we attempt to access it in methods like getWiFiIsSaved().	
-  Wifi.beginn();	
+  WiFi.begin();	
   	
   #ifndef ESP32
   WiFi.persistent(false); // disable persistent so scannetworks and mode switching do not cause overwrites
@@ -285,7 +285,8 @@ boolean WiFiManager::autoConnect(char const *apName, char const *apPassword) {
     WiFi.mode(WIFI_STA);
   }
   #endif
-
+  
+  if(getWiFiIsSaved){
     // sethostname before wifi ready
     // https://github.com/tzapu/WiFiManager/issues/1403
     #ifdef ESP32
@@ -3638,10 +3639,10 @@ String WiFiManager::WiFi_SSID(bool persistent) const{
     #elif defined(ESP32)
     if(persistent){
       wifi_config_t conf;
-      if(!esp_wifi_get_config(WIFI_IF_STA, &conf){
+      if(!esp_wifi_get_config(WIFI_IF_STA, &conf)){
         return String(reinterpret_cast<const char*>(conf.sta.ssid));
       }
-      retrun String();
+      return String();
     }
     else {
       if(WiFiGenericClass::getMode() == WIFI_MODE_NULL){
