@@ -3730,7 +3730,7 @@ String WiFiManager::WiFi_SSID(bool persistent) const{
     #elif defined(ESP32)
     if(persistent){
       wifi_config_t conf;
-      if(esp_wifi_get_config(WIFI_IF_STA, &conf) == ESP_O){
+      if(esp_wifi_get_config(WIFI_IF_STA, &conf) == ESP_OK){
         return String(reinterpret_cast<const char*>(conf.sta.ssid));
       }
       return String();
