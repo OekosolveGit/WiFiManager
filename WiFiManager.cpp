@@ -250,6 +250,10 @@ void WiFiManager::_begin(){
   _hasBegun = true;
   // _usermode = WiFi.getMode();
 
+  // Has to be done at the start to ensure the esp_wifi_config is initialized,
+  // before we attempt to access it in methods like getWiFiIsSaved().	
+  Wifi.begin();	
+
   #ifndef ESP32
   WiFi.persistent(false); // disable persistent so scannetworks and mode switching do not cause overwrites
   #endif
@@ -298,9 +302,9 @@ boolean WiFiManager::autoConnect(char const *apName, char const *apPassword) {
   }
   #endif
 
-  // check if wifi is saved, (has autoconnect) to speed up cp start
-  // NOT wifi init safe
-  // if(wifiIsSaved){
+    // check if wifi is saved, (has autoconnect) to speed up cp start
+    // NOT wifi init safe
+    // if(wifiIsSaved){
      _startconn = millis();
     _begin();
 
@@ -3357,7 +3361,9 @@ void WiFiManager::debugSoftAPConfig(){
     #elif defined(ESP32)
       wifi_country_t country;
       wifi_config_t conf_config;
-      esp_wifi_get_config(WIFI_IF_AP, &conf_config); // == ESP_OK
+      if(esp_wifi_get_config(WIFI_IF_AP, &conf_config) != ESP_OK){
+        return;
+      }
       wifi_ap_config_t config = conf_config.ap;
       esp_wifi_get_country(&country);
     #endif
@@ -3724,8 +3730,10 @@ String WiFiManager::WiFi_SSID(bool persistent) const{
     #elif defined(ESP32)
     if(persistent){
       wifi_config_t conf;
-      esp_wifi_get_config(WIFI_IF_STA, &conf);
-      return String(reinterpret_cast<const char*>(conf.sta.ssid));
+      if(esp_wifi_get_config(WIFI_IF_STA, &conf) == ESP_O){
+        return String(reinterpret_cast<const char*>(conf.sta.ssid));
+      }
+      return String();
     }
     else {
       if(WiFiGenericClass::getMode() == WIFI_MODE_NULL){
@@ -3758,8 +3766,10 @@ String WiFiManager::WiFi_psk(bool persistent) const {
       return String();
     }
     wifi_config_t conf;
-    esp_wifi_get_config(WIFI_IF_STA, &conf);
-    return String(reinterpret_cast<char*>(conf.sta.password));
+    if(esp_wifi_get_config(WIFI_IF_STA, &conf) == ESP_OK){
+      return String(reinterpret_cast<char*>(conf.sta.password));
+    }
+    return String();
     #endif
 }
 
