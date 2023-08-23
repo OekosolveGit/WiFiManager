@@ -487,6 +487,9 @@ class WiFiManager
     // get hostname helper
     String        getWiFiHostname();
 
+    // helper to reconnect to saved wifi or the given wifi credentials
+    uint8_t       connectWifi(String ssid, String pass, bool connect = true);
+
 
     std::unique_ptr<DNSServer>        dnsServer;
 
@@ -636,7 +639,6 @@ class WiFiManager
     void          setupDNSD();
     void          setupHTTPServer();
 
-    uint8_t       connectWifi(String ssid, String pass, bool connect = true);
     bool          setSTAConfig();
     bool          wifiConnectDefault();
     bool          wifiConnectNew(String ssid, String pass,bool connect = true);
